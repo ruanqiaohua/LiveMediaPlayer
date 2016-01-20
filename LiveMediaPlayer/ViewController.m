@@ -7,16 +7,37 @@
 //
 
 #import "ViewController.h"
+#import "KSYPhoneLivePlayView.h"
+#import "CommentModel.h"
+#import "SpectatorModel.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface ViewController ()
-
+@property (strong, nonatomic) KSYPhoneLivePlayView *phoneLivePlayVC;
+@property (strong, nonatomic) NSString *videoUrlString;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    //设置后台音频播放
+    [self settingBackgroundMusicPlayer];
+    //流媒体播放
+    [self playVideo];
+}
+
+- (void)settingBackgroundMusicPlayer {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setActive:YES error:nil];
+    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+}
+
+- (void)playVideo {
+    self.videoUrlString =  @"rtmp://live.hkstv.hk.lxdns.com/live/hks";
+    _phoneLivePlayVC = [[KSYPhoneLivePlayView alloc] initWithFrame:self.view.bounds urlString:self.videoUrlString playState:KSYPhoneLivePlay];
+    [self.view addSubview:_phoneLivePlayVC];
 }
 
 - (void)didReceiveMemoryWarning {
